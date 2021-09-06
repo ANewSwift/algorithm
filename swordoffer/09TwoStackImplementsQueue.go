@@ -15,12 +15,12 @@ func main() {
 
 
 func (this *CQueue) AppendTail(value int) {
-	this.Q2.Push(value)
+	this.Q2.Push(&Node{value, nil})
 }
 
 func (this *CQueue) DeleteHead() int {
 	if this.Q1.Tail != nil {
-		return this.Q1.Pop()
+		return this.Q1.Pop().Val
 	}
 	for this.Q2.Tail != nil {
 		this.Q1.Push(this.Q2.Pop())
@@ -28,7 +28,7 @@ func (this *CQueue) DeleteHead() int {
 	if this.Q1.Tail == nil {
 		return -1
 	}
-	return this.Q1.Pop()
+	return this.Q1.Pop().Val
 }
 
 /**
@@ -54,18 +54,19 @@ type Queue struct {
 	Tail *Node
 }
 
-func (queue *Queue) Push(value int) {
-	queue.Tail = &Node{value, queue.Tail}
+func (queue *Queue) Push(node *Node) {
+	node.Next = queue.Tail
+	queue.Tail = node
 }
 
-func (queue *Queue) Pop() int {
+func (queue *Queue) Pop() *Node {
 	if queue.Tail == nil {
-		return -1
+		return nil
 	}
 	node := queue.Tail
 	queue.Tail = queue.Tail.Next
 	node.Next = nil
-	return node.Val
+	return node
 }
 
 func (queue *Queue) Print() {
